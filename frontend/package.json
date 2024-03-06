@@ -1,7 +1,6 @@
 {
   "name": "frontend",
   "version": "0.1.0",
-  "proxy": "https://chat-book-2eb3.vercel.app",
   "private": true,
   "dependencies": {
     "@chakra-ui/icons": "^2.1.1",

@@ -51,7 +51,7 @@ const Signup = () => {
         },
       };
       const { data } = await axios.post(
-        "/api/user",
+        `${process.env.REACT_APP_BASE_URL}/api/user`,
         {
           name,
           email,
@@ -101,7 +101,7 @@ const Signup = () => {
       data.append("file", pics);
       data.append("upload_preset", "chat-app");
       data.append("cloud_name", "dbrm2omel");
-      fetch("https://api.cloudinary.com/v1_1/dbrm2omel/image/upload", {
+      fetch(process.env.REACT_APP_CLOUDINARY_URL, {
         method: "post",
         body: data,
       })
