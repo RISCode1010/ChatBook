@@ -1,9 +1,12 @@
 // const express = require('express');
 const dotenv = require('dotenv');
+const { Server } = require("socket.io");
+const { createServer } = require("http");
 const connectMongo = require('./config/database');
 // const path = require('path'); 
 
 const app = require("./app");
+const server = createServer(app);
 
 dotenv.config({
     path: "./config/.env"
@@ -39,14 +42,15 @@ app.get("/",(req,res)=>{
 })
 
 
-const server = app.listen(port,()=>{
-    console.log(`app lisening at http://localhost:${port}`);
-})
+// const server = app.listen(port,()=>{
+//     console.log(`app lisening at http://localhost:${port}`);
+// })
 
-const io = require("socket.io")(server, {
+const io = new Server(server, {
     pingTimeout: 60000,
     cors: {
-      origin: "https://chatbook-main.vercel.app",
+      origin: process.env.FRONTEND_URL,
+      methods: ["GET", "POST"],
       credentials: true,
     },
   });
@@ -82,4 +86,8 @@ const io = require("socket.io")(server, {
       socket.leave(userData._id);
     });
   });
+
+server.listen(port,()=>{
+    console.log(`app lisening at http://localhost:${port}`);
+})
 
