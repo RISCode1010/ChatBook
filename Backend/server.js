@@ -64,8 +64,8 @@ const server = createServer(app);
 const io = new Server(server, {
     pingTimeout: 60000,
     cors: {
-      origin: process.env.FRONTEND_URL,
-      // credentials: true,
+      origin: ["http://localhost:3000"],
+		  methods: ["GET", "POST"],
     },
   });
   
