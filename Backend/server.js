@@ -1,12 +1,10 @@
-// const express = require('express');
+const express = require('express');
 const dotenv = require('dotenv');
-const { Server } = require("socket.io");
-const { createServer } = require("http");
 const connectMongo = require('./config/database');
-// const path = require('path'); 
+const path = require('path'); 
+const { notFound, errorHandler } = require("./middleware/errorMiddleware");
 
 const app = require("./app");
-const server = createServer(app);
 
 dotenv.config({
     path: "./config/.env"
@@ -17,37 +15,44 @@ connectMongo();
 
 // --------------------------deployment------------------------------
 
-// const __dirname1 = path.resolve();
+const __dirname1 = path.resolve();
 
-// if (process.env.NODE_ENV === "production") {
-//   const frontendBuildPath = path.join(__dirname1, "../frontend/build");
-//   console.log(frontendBuildPath);
-//   app.use(express.static(frontendBuildPath));
+if (process.env.NODE_ENV === "production") {
+  const frontendBuildPath = path.join(__dirname1, "../frontend/build");
+  console.log(frontendBuildPath);
+  app.use(express.static(frontendBuildPath));
 
-//   app.get("*", (req, res) =>
-//     res.sendFile(path.resolve(frontendBuildPath, "index.html"))
-//   );
-// } else {
-//   app.get("/", (req, res) => {
-//     res.send("API is running..");
-//   });
-// }
+  app.get("*", (req, res) =>
+    res.sendFile(path.resolve(frontendBuildPath, "index.html"))
+  );
+} else {
+  app.get("/", (req, res) => {
+    res.send("API is running..");
+  });
+}
+
+
+app.use(notFound);
+app.use(errorHandler);
 
 // ---------------------------------------------------------------------
 
 const port = process.env.PORT || 4000;
 
-
-// const server = app.listen(port,()=>{
-//     console.log(`app lisening at http://localhost:${port}`);
+// app.get("/",(req,res)=>{
+//     res.json("server is ready")
 // })
 
-const io = new Server(server, {
+
+const server = app.listen(port,()=>{
+    console.log(`app lisening at http://localhost:${port}`);
+})
+
+const io = require("socket.io")(server, {
     pingTimeout: 60000,
     cors: {
-      origin: process.env.FRONTEND_URL,
-      methods: ["GET", "POST"],
-      credentials: true,
+      origin: "http://localhost:3000",
+      // credentials: true,
     },
   });
   
@@ -82,8 +87,4 @@ const io = new Server(server, {
       socket.leave(userData._id);
     });
   });
-
-server.listen(port,()=>{
-    console.log(`app lisening at http://localhost:${port}`);
-})
 

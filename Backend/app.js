@@ -1,8 +1,9 @@
 const express = require('express');
+// const path = require('path');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser'); // Corrected spelling
 const cors = require('cors');
-const { notFound, errorHandler } = require("./middleware/errorMiddleware");
+// const { notFound, errorHandler } = require("./middleware/errorMiddleware");
 
 const app = express();
 
@@ -24,9 +25,9 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
-app.get("/",(req,res)=>{
-    res.json("server is ready")
-})
+// app.get("/",(req,res)=>{
+//     res.json("server is ready")
+// })
 
 // const __dirname1 = path.resolve();
 
@@ -52,7 +53,7 @@ app.use("/api/user", userRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/message", messageRoutes);
 
-app.use(notFound);
-app.use(errorHandler);
+// app.use(notFound);
+// app.use(errorHandler);
 
 module.exports = app;
