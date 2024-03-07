@@ -1,9 +1,9 @@
-// const express = require('express');
+const express = require('express');
 const dotenv = require('dotenv');
 const { Server } = require('socket.io');
 const { createServer } = require("http");
 const connectMongo = require('./config/database');
-// const path = require('path'); 
+const path = require('path'); 
 const { notFound, errorHandler } = require("./middleware/errorMiddleware");
 
 const app = require("./app");
@@ -19,20 +19,20 @@ connectMongo();
 
 // --------------------------deployment------------------------------
 
-// const __dirname1 = path.resolve();
+const __dirname1 = path.resolve();
 
 // if (process.env.NODE_ENV === "production") {
-//   const frontendBuildPath = path.join(__dirname1, "../frontend/build");
-//   console.log(frontendBuildPath);
-//   app.use(express.static(frontendBuildPath));
+  const frontendBuildPath = path.join(__dirname1, "../frontend/build");
+  console.log(frontendBuildPath);
+  app.use(express.static(frontendBuildPath));
 
-//   app.get("*", (req, res) =>
-//     res.sendFile(path.resolve(frontendBuildPath, "index.html"))
-//   );
+  app.get("*", (req, res) =>
+    res.sendFile(path.join(frontendBuildPath, "index.html")));
+  // );
 // } else {
-//   app.get("/", (req, res) => {
-//     res.send("API is running..");
-//   });
+  // app.get("/", (req, res) => {
+  //   res.send("API is running..");
+  // });
 // }
 
 // ---------------------------------------------------------------------

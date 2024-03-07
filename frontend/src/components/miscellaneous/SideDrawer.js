@@ -57,7 +57,10 @@ function SideDrawer() {
         },
       };
 
-      const { data } = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/user?search=${search}`, config);
+      const { data } = await axios.get(
+        // `${process.env.REACT_APP_BASE_URL}/api/user?search=${search}`,
+        `/api/user?search=${search}`, 
+        config);
 
       setLoading(false); 
       setSearchResult(data);
@@ -83,7 +86,10 @@ function SideDrawer() {
           Authorization: `Bearer ${user.token}`,
         },
       };
-      const { data } = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/chat`, { userId }, config);
+      const { data } = await axios.post(
+        // `${process.env.REACT_APP_BASE_URL}/api/chat`,
+        `/api/chat`, 
+        { userId }, config);
 
       if (!chats.find((c) => c._id === data._id)) setChats([data, ...chats]);
       setSelectedChat(data);

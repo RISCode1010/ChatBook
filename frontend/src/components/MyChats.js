@@ -25,7 +25,10 @@ const MyChats = ({ fetchAgain }) => {
         },
       };
 
-      const { data } = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/chat`, config);
+      const { data } = await axios.get(
+        // `${process.env.REACT_APP_BASE_URL}/api/chat`,
+        `/api/chat`, 
+        config);
       setChats(data);
     } catch (error) {
       toast({
