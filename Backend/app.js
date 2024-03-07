@@ -1,5 +1,4 @@
 const express = require('express');
-// const path = require('path');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser'); // Corrected spelling
 const cors = require('cors');
@@ -24,26 +23,6 @@ app.use(bodyParser.urlencoded({
     limit: '50mb',
     extended: true
 }));
-
-// app.get("/",(req,res)=>{
-//     res.json("server is ready")
-// })
-
-// const __dirname1 = path.resolve();
-
-// if (process.env.NODE_ENV === "production") {
-//   const frontendBuildPath = path.join(__dirname1, "../frontend/build");
-//   console.log(frontendBuildPath);
-//   app.use(express.static(frontendBuildPath));
-
-//   app.get("*", (req, res) =>
-//     res.sendFile(path.resolve(frontendBuildPath, "index.html"))
-//   );
-// } else {
-//   app.get("/", (req, res) => {
-//     res.send("API is running..");
-//   });
-// }
 
 const userRoutes = require('./routes/userRoute');
 const messageRoutes = require('./routes/messageRoute');

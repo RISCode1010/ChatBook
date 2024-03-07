@@ -1,10 +1,14 @@
-const express = require('express');
+// const express = require('express');
 const dotenv = require('dotenv');
+const { Server } = require('socket.io');
+const { createServer } = require("http");
 const connectMongo = require('./config/database');
-const path = require('path'); 
+// const path = require('path'); 
 const { notFound, errorHandler } = require("./middleware/errorMiddleware");
 
 const app = require("./app");
+
+
 
 dotenv.config({
     path: "./config/.env"
@@ -15,49 +19,58 @@ connectMongo();
 
 // --------------------------deployment------------------------------
 
-const __dirname1 = path.resolve();
+// const __dirname1 = path.resolve();
 
-if (process.env.NODE_ENV === "production") {
-  const frontendBuildPath = path.join(__dirname1, "../frontend/build");
-  console.log(frontendBuildPath);
-  app.use(express.static(frontendBuildPath));
+// if (process.env.NODE_ENV === "production") {
+//   const frontendBuildPath = path.join(__dirname1, "../frontend/build");
+//   console.log(frontendBuildPath);
+//   app.use(express.static(frontendBuildPath));
 
-  app.get("*", (req, res) =>
-    res.sendFile(path.resolve(frontendBuildPath, "index.html"))
-  );
-} else {
-  app.get("/", (req, res) => {
-    res.send("API is running..");
-  });
-}
-
-
-app.use(notFound);
-app.use(errorHandler);
+//   app.get("*", (req, res) =>
+//     res.sendFile(path.resolve(frontendBuildPath, "index.html"))
+//   );
+// } else {
+//   app.get("/", (req, res) => {
+//     res.send("API is running..");
+//   });
+// }
 
 // ---------------------------------------------------------------------
 
 const port = process.env.PORT || 4000;
 
-// app.get("/",(req,res)=>{
-//     res.json("server is ready")
-// })
-
-
-const server = app.listen(port,()=>{
-    console.log(`app lisening at http://localhost:${port}`);
+app.get("/",(req,res)=>{
+    res.json("server is ready")
 })
 
-const io = require("socket.io")(server, {
+
+app.use(notFound);
+app.use(errorHandler);
+
+const server = createServer(app);
+
+
+
+// const servermain = createServer(server);
+
+// const io = new Server(server, {
+//   cors: {
+//     origin: "http://localhost:5173",
+//     methods: ["GET", "POST"],
+//     credentials: true,
+//   },
+// });
+
+const io = new Server(server, {
     pingTimeout: 60000,
     cors: {
-      origin: "http://localhost:3000",
+      origin: process.env.FRONTEND_URL,
       // credentials: true,
     },
   });
   
   io.on("connection", (socket) => {
-    // console.log("Connected to socket.io");
+    console.log("Connected to socket.io");
     socket.on("setup", (userData) => {
       socket.join(userData._id);
       socket.emit("connected");
@@ -65,7 +78,7 @@ const io = require("socket.io")(server, {
   
     socket.on("join chat", (room) => {
       socket.join(room);
-      // console.log("User Joined Room: " + room);
+      console.log("User Joined Room: " + room);
     });
     socket.on("typing", (room) => socket.in(room).emit("typing"));
     socket.on("stop typing", (room) => socket.in(room).emit("stop typing"));
@@ -87,4 +100,9 @@ const io = require("socket.io")(server, {
       socket.leave(userData._id);
     });
   });
+
+
+  server.listen(port,()=>{
+    console.log(`app lisening at http://localhost:${port}`);
+})
 
