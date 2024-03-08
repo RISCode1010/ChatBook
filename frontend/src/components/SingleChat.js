@@ -16,7 +16,7 @@ import back from "../b6666.jpg"
 import io from "socket.io-client";
 import UpdateGroupChatModal from "./miscellaneous/UpdateGroupChatModal.js";
 import { ChatState } from "../Context/ChatProvider";
-const ENDPOINT = "http://localhost:5000"; //  -> After deployment deploy url
+// const ENDPOINT = "http://localhost:5000"; //  -> After deployment deploy url
 var socket, selectedChatCompare;
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
